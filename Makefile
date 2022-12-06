@@ -1,3 +1,6 @@
+# system libraries to include
+LIBS =
+
 # final executable name
 EXEC_NAME := stuff
 
@@ -15,7 +18,7 @@ MAIN_C := src/main.c
 
 # compiler and linker flags
 CFLAGS += -Wall -Wextra -Werror -std=c99 $(addprefix -I,$(INC_DIRS))
-LDFLAGS +=
+LDFLAGS += $(addprefix -l,$(LIBS))
 
 # configurable build profile
 DEBUG ?= 1
@@ -23,7 +26,8 @@ DEBUG ?= 1
 # configure build profile
 ifeq ($(DEBUG), 1)
 #	CFLAGS += -g -DDEBUG
-	CFLAGS += -g
+	CFLAGS += -g -fsanitize=address -fsanitize=undefined
+	LDFLAGS += -fsanitize=address -fsanitize=leak -fsanitize=undefined
 else
 	CFLAGS += -O3
 endif
